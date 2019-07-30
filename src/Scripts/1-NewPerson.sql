@@ -1,0 +1,1 @@
+INSERT INTO Persons VALUES(3, 'Jane');
