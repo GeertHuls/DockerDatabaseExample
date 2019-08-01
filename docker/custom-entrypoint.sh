@@ -1,4 +1,3 @@
 #!/bin/bash
 echo 'starting mysql db!'
-sleep 30
-./home/migrator/DockerDatabaseExample
+exec ./usr/local/bin/custom-docker-entrypoint.sh mysqld
