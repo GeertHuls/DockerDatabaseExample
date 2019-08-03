@@ -11,8 +11,21 @@ namespace DockerDatabaseExample
     {
         static void Main(string[] args)
         {
-            Wait10SecondsBeforeMigrationStarts();
+            // TODO: implement circuit breaker using Polly instead...
+            bool result;
+            do
+            {
+                result = MigrateDatabase();
+                if (!result)
+                {
+                    WaitTwentySeconds();
+                }
 
+            } while (!result);
+        }
+
+        private static bool MigrateDatabase()
+        {
             var configuration = GetConfiguration();
 
             var connectionString = configuration
@@ -38,6 +51,8 @@ namespace DockerDatabaseExample
             {
                 Console.WriteLine("Database migration was successful!");
             }
+
+            return result.Successful;
         }
 
         private static IConfiguration GetConfiguration()
@@ -48,16 +63,10 @@ namespace DockerDatabaseExample
                 .Build();
         }
 
-        private static void Wait10SecondsBeforeMigrationStarts()
+        private static void WaitTwentySeconds()
         {
-            // ** Warning: hack ahead...
-            // The migration of the database will run in the background and
-            // can only work before the mysql database is up and running.
-            // This happens in the docker entrypoint at the bottom of the script.
-            // This delay allows the mysql database to be up and running BEFORE
-            // the migration starts, otherwise the migration will fail.
-            var tenSeconds = 10000;
-            Thread.Sleep(tenSeconds);
+            var twentySeconds = 20000;
+            Thread.Sleep(twentySeconds);
         }
     }
 }

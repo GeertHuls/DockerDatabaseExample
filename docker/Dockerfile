@@ -12,8 +12,7 @@ RUN dotnet publish -c release `
 
 FROM mysql:5.7
 
-COPY --from=builder /home/publish /home/migrator
+COPY --from=builder /home/publish /dbmigrator
 COPY docker/custom-entrypoint.sh .
-COPY docker/custom-docker-entrypoint.sh /usr/local/bin
 
 ENTRYPOINT [ "/custom-entrypoint.sh" ]
