@@ -12,6 +12,8 @@ RUN dotnet publish -c release `
 
 FROM mysql:5.7
 
+ENV MYSQL_ROOT_PASSWORD="defaultpwd"
+
 COPY --from=builder /home/publish /dbmigrator
 COPY docker/custom-entrypoint.sh .
 

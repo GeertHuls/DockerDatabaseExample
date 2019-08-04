@@ -28,9 +28,7 @@ namespace DockerDatabaseExample
         {
             var configuration = GetConfiguration();
 
-            var connectionString = configuration
-                .GetSection("ConnectionStrings:MySqlDb")
-                .Value;
+            var connectionString = ResolveConnectionString(configuration);
 
             EnsureDatabase.For.MySqlDatabase(connectionString);
 
@@ -61,6 +59,21 @@ namespace DockerDatabaseExample
                 .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
                 .AddJsonFile("appsettings.json", false)
                 .Build();
+        }
+
+        private static string ResolveConnectionString(IConfiguration configuration)
+        {
+            var connectionString = configuration
+                .GetSection("ConnectionStrings:MySqlDb")
+                .Value;
+
+            var dbPassword = Environment.GetEnvironmentVariable("MYSQL_ROOT_PASSWORD");
+            if (string.IsNullOrWhiteSpace(dbPassword))
+            {
+                throw new InvalidOperationException("Error: MySql database password was not set!");
+            }
+
+            return string.Format(connectionString, dbPassword);
         }
 
         private static void WaitTwentySeconds()
