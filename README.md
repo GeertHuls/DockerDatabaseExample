@@ -14,3 +14,6 @@ To run a container from the image with the default datbase password:
 
 To run a container from the image with a custom password (recommended):
 > docker run -e MYSQL_ROOT_PASSWORD=mynewpassword -d <img_name>:\<tag>
+
+Or run it with a named volume:
+> docker run -v db:/var/lib/mysql -d <img_name>:\<tag>

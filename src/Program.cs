@@ -15,7 +15,17 @@ namespace DockerDatabaseExample
             bool result;
             do
             {
-                result = MigrateDatabase();
+                try
+                {
+                    result = MigrateDatabase();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    result = false;
+                }
+
                 if (!result)
                 {
                     WaitTwentySeconds();
